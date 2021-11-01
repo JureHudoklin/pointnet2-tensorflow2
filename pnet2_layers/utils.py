@@ -42,10 +42,24 @@ def sample_and_group_all(xyz, points, use_xyz=True):
 	batch_size = xyz.get_shape()[0]
 	nsample = xyz.get_shape()[1]
 
-	new_xyz = tf.constant(np.tile(np.array([0,0,0]).reshape((1,1,3)), (batch_size,1,1)),dtype=tf.float32) # (batch_size, 1, 3)
+	# TODO: Bug fixed by Sungwon
+	# new_xyz = tf.constant(np.tile(np.array([0,0,0]).reshape((1,1,3)), (batch_size,1,1)),dtype=tf.float32) # (batch_size, 1, 3)
+	new_xyz = tf.tile(
+		tf.constant([[[1, 1, 1]]], dtype=tf.float32),
+		tf.concat([tf.shape(xyz)[0:1], [1], [1]], axis=0))
 
-	idx = tf.constant(np.tile(np.array(range(nsample)).reshape((1,1,nsample)), (batch_size,1,1)))
-	grouped_xyz = tf.reshape(xyz, (batch_size, 1, nsample, 3)) # (batch_size, npoint=1, nsample, 3)
+	# TODO: Bug fixed by Sungwon
+	# idx = tf.constant(np.tile(np.array(range(nsample)).reshape((1,1,nsample)), (batch_size,1,1)))
+	idx = tf.tile(
+		tf.reshape(tf.range(0, nsample), (1, 1, nsample)),
+		tf.concat([tf.shape(xyz)[0:1], [1], [1]], axis=0))
+
+	# TODO: Bug fixed by Sunwon
+	# grouped_xyz = tf.reshape(xyz, (batch_size, 1, nsample, 3)) # (batch_size, npoint=1, nsample, 3)
+	grouped_xyz = tf.reshape(
+		xyz,
+		tf.concat([tf.shape(xyz)[0:1], [1], [nsample], [3]], axis=0))
+
 	if points is not None:
 		if use_xyz:
 			new_points = tf.concat([xyz, points], axis=2) # (batch_size, 16, 259)

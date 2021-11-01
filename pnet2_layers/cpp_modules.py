@@ -6,9 +6,15 @@ from tensorflow.python.framework import ops
 
 from tensorflow.keras.layers import MaxPool1D, Layer
 
-sampling_module=tf.load_op_library('./tf_ops/sampling/tf_sampling_so.so')
-grouping_module=tf.load_op_library('./tf_ops/grouping/tf_grouping_so.so')
-interpolate_module=tf.load_op_library('./tf_ops/3d_interpolation/tf_interpolate_so.so')
+# TODO: Fixed by Sungwon
+BASE_PATH = os.path.join(os.path.dirname(__file__), '../tf_ops')
+SAMPLING_PATH = os.path.join(BASE_PATH, 'sampling/tf_sampling_so.so')
+GOURPING_PATH = os.path.join(BASE_PATH, 'grouping/tf_grouping_so.so')
+INTERPOLATE_PATH = os.path.join(BASE_PATH, '3d_interpolation/tf_interpolate_so.so')
+sampling_module = tf.load_op_library(SAMPLING_PATH)
+grouping_module = tf.load_op_library(GOURPING_PATH)
+interpolate_module = tf.load_op_library(INTERPOLATE_PATH)
+
 
 def prob_sample(inp,inpr):
 	return sampling_module.prob_sample(inp,inpr)

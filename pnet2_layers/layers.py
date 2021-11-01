@@ -54,9 +54,12 @@ class Pointnet_SA(Layer):
 		for i, mlp_layer in enumerate(self.mlp_list):
 			new_points = mlp_layer(new_points, training=training)
 
-		new_points = tf.math.reduce_max(new_points, axis=2, keepdims=True)
+		# TODO: bug fixed. It is not tested for smaple_and_group!!!
+		# new_points = tf.math.reduce_max(new_points, axis=2, keepdims=True)
+		# new_points = tf.squeeze(new_points) # --> maybe axis = [2]???
+		new_points = tf.math.reduce_max(new_points, axis=2, keepdims=False)
 
-		return new_xyz, tf.squeeze(new_points)
+		return new_xyz, new_points
 
 
 class Pointnet_SA_MSG(Layer):
@@ -168,8 +171,12 @@ class Pointnet_FP(Layer):
 		for i, mlp_layer in enumerate(self.mlp_list):
 			new_points1 = mlp_layer(new_points1, training=training)
 
-		new_points1 = tf.squeeze(new_points1)
-		if len(new_points1.shape) < 3:
-			new_points1 = tf.expand_dims(new_points1, axis=0)
+		# TODO: Bug fixed by Sungwon
+		# new_points1 = tf.squeeze(new_points1)
+		new_points1 = tf.squeeze(new_points1, axis=2)
+
+		# TODO: Bug fixed by Sungwon
+		# if len(new_points1.shape) < 3:
+		# 	new_points1 = tf.expand_dims(new_points1, axis=0)
 
 		return new_points1
