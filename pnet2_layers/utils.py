@@ -105,3 +105,14 @@ class Conv2d(Layer):
 		if self.activation: points = self.activation(points)
 
 		return points
+
+	def get_config(self):
+		config = super(Conv2d, self).get_config()
+		config.update({
+			"filters": self.filters,
+			"strides": self.strides,
+			"activation": self.activation,
+			"padding": self.padding,
+			"initializer": self.initializer,
+			"bn": self.bn})
+		return config

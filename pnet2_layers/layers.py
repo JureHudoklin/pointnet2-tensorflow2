@@ -9,9 +9,7 @@ class Pointnet_SA(Layer):
 	def __init__(
 		self, npoint, radius, nsample, mlp, group_all=False, knn=False, use_xyz=True, activation=tf.nn.relu, bn=False
 	):
-
 		super(Pointnet_SA, self).__init__()
-
 		self.npoint = npoint
 		self.radius = radius
 		self.nsample = nsample
@@ -21,7 +19,6 @@ class Pointnet_SA(Layer):
 		self.use_xyz = use_xyz
 		self.activation = activation
 		self.bn = bn
-
 		self.mlp_list = []
 
 	def build(self, input_shape):
@@ -61,6 +58,20 @@ class Pointnet_SA(Layer):
 
 		return new_xyz, new_points
 
+	def get_config(self):
+		config = super(Pointnet_SA, self).get_config()
+		config.update({
+			"npoint": self.npoint,
+			"radius": self.radius,
+			"nsample": self.nsample,
+			"mlp": self.mlp,
+			"group_all": self.group_all,
+			"knn": self.knn,
+			"use_xyz": self.use_xyz,
+			"activation": self.activation,
+			"bn": self.bn,
+			"mlp_list": self.mlp_list})
+		return config
 
 class Pointnet_SA_MSG(Layer):
 
@@ -124,6 +135,18 @@ class Pointnet_SA_MSG(Layer):
 
 		return new_xyz, new_points_concat
 
+	def get_config(self):
+		config = super(Pointnet_SA_MSG, self).get_config()
+		config.update({
+			"npoint": self.npoint,
+			"radius_list": self.radius_list,
+			"nsample_list": self.nsample_list,
+			"mlp": self.mlp,
+			"use_xyz": self.use_xyz,
+			"activation": self.activation,
+			"bn": self.bn})
+		return config
+
 
 class Pointnet_FP(Layer):
 
@@ -136,7 +159,6 @@ class Pointnet_FP(Layer):
 		self.mlp = mlp
 		self.activation = activation
 		self.bn = bn
-
 		self.mlp_list = []
 
 
@@ -180,3 +202,12 @@ class Pointnet_FP(Layer):
 		# 	new_points1 = tf.expand_dims(new_points1, axis=0)
 
 		return new_points1
+
+	def get_config(self):
+		config = super(Pointnet_FP, self).get_config()
+		config.update({
+			"mlp": self.mlp,
+			"activation": self.activation,
+			"bn": self.bn,
+			"mlp_list": self.mlp_list})
+		return config
