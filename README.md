@@ -17,7 +17,7 @@ To compile the tensorflow Ops first ensure the `CUDA_ROOT` path in `tf_ops/compi
 
 ```
 chmod u+x tf_ops/compile_ops.sh
-tf_ops/compile_ops.sh
+tf_ops/compile_ops.sh CUDA_VERSION
 ```
 
 ## Usage
